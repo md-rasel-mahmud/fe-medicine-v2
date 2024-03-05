@@ -2,15 +2,13 @@ import { Suspense } from "react";
 import TopLoader from "./utils/TopLoader";
 
 const Loadable = (Component) => {
-  const LoadableComponent = (props) => (
-    <Suspense fallback={<TopLoader />}>
-      <Component {...props} />
-    </Suspense>
-  );
-
-  LoadableComponent.displayName = `Loadable(${
-    Component.displayName || Component.name || "Component"
-  })`;
+  const LoadableComponent = (props) => {
+    return (
+      <Suspense fallback={<TopLoader />}>
+        <Component {...props} />
+      </Suspense>
+    );
+  };
 
   return LoadableComponent;
 };

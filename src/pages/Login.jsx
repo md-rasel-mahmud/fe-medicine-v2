@@ -1,15 +1,13 @@
-import {useState, useRef} from 'react'
-import {Link} from 'react-router-dom'
-import Login from '../features/user/Login'
+import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import Login from "../features/user/Login";
 
-function ExternalPage(){
-
-
-    return(
-        <div className="">
-                <Login />
-        </div>
-    )
+function ExternalPage() {
+  return (
+    <div className="">
+      <Login />
+    </div>
+  );
 }
 
-export default ExternalPage
+export default ExternalPage;

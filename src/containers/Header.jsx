@@ -51,7 +51,7 @@ function Header() {
     // navbar fixed  flex-none justify-between bg-base-300  z-10 shadow-md
 
     <>
-      <div className="navbar sticky top-0 bg-base-100  z-10 shadow-md ">
+      <div className="navbar sticky top-0 bg-base-100 z-[999] shadow-md ">
         {/* Menu toogle for mobile view or small screen */}
         <div className="flex-1">
           <label
@@ -115,7 +115,10 @@ function Header() {
           <div className="dropdown dropdown-end ml-4">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src="https://placeimg.com/80/80/people" alt="profile" />
+                <img
+                  src="https://reqres.in/img/faces/1-image.jpg"
+                  alt="profile"
+                />
               </div>
             </label>
             <ul

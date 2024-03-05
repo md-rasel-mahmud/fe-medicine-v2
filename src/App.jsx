@@ -1,14 +1,17 @@
-import React, { lazy, useEffect } from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
+  Outlet,
+  RouterProvider,
 } from "react-router-dom";
 import { themeChange } from "theme-change";
 import checkAuth from "./app/auth";
 import initializeApp from "./app/init";
+import { lazy, useEffect } from "react";
+import routes from "./routes";
 
 // Importing pages
 const Layout = lazy(() => import("./containers/Layout"));
@@ -30,22 +33,25 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/documentation" element={<Documentation />} />
+    // <Router>
+    //   <Routes>
+    //     <Route path="/login" element={<Login />} />
+    //     <Route path="/forgot-password" element={<ForgotPassword />} />
+    //     <Route path="/register" element={<Register />} />
+    //     <Route path="/documentation" element={<Documentation />} />
 
-        {/* Place new routes over this */}
-        <Route path="/app/*" element={<Layout />} />
+    //     {/* Place new routes over this */}
+    //     <Route path="/app/*" element={<Layout />} />
 
-        <Route
-          path="*"
-          element={<Navigate to={token ? "/app/welcome" : "/login"} replace />}
-        />
-      </Routes>
-    </Router>
+    //     <Route
+    //       path="*"
+    //       element={<Navigate to={token ? "/app/welcome" : "/login"} replace />}
+    //     />
+    //   </Routes>
+    // </Router>
+    <>
+      <RouterProvider router={routes}></RouterProvider>
+    </>
   );
 }
 
