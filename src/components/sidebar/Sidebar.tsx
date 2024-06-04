@@ -1,5 +1,5 @@
 import { ChevronLeft, ExpandLess, ExpandMore, Menu } from '@mui/icons-material';
-import { Avatar, Collapse } from '@mui/material';
+import { Avatar, Collapse, Tooltip } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +13,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { CSSObject, Theme, styled, useTheme } from '@mui/material/styles';
+import { CSSObject, Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import SideBarHeader from './SideBarHeader';
@@ -89,8 +89,6 @@ const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
   const [open, setOpen] = React.useState(true);
   const [listItemOpen, setListItemOpen] = React.useState(false);
 
-  const theme = useTheme();
-
   const handleDrawerOpenClose = () => {
     setOpen(!open);
   };
@@ -98,8 +96,6 @@ const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
   const handleListItemToggle = () => {
     setListItemOpen(!listItemOpen);
   };
-
-  console.log(theme.direction);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -115,7 +111,6 @@ const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
             color='inherit'
             edge='start'
             sx={{
-              // marginLeft: -3,
               ...(open && { display: 'none' }),
             }}
           >
@@ -137,67 +132,150 @@ const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
         <List>
           {sidebarMenuItems.map((menuItem, index) => {
             if (menuItem.children) {
-              return (
-                <>
-                  <ListItem
-                    key={`${menuItem.id}-${index}`}
-                    sx={{ display: open ? 'block' : 'none' }}
-                  >
-                    <Typography
-                      variant='body2'
-                      color='text.secondary'
-                      fontWeight='bold'
+              if (open) {
+                return (
+                  <>
+                    <ListItem
+                      key={`${menuItem.id}-${index}`}
+                      sx={{ display: open ? 'block' : 'none' }}
                     >
-                      {menuItem.moduleTitle}
-                    </Typography>
-                  </ListItem>
-                  <ListItem
-                    key={`${menuItem.id}-${index}`}
-                    disablePadding
-                    sx={{ display: 'block' }}
-                  >
-                    <ListItemButton
-                      onClick={handleListItemToggle}
-                      sx={{
-                        minHeight: 48,
-                        justifyContent: open ? 'initial' : 'center',
-                        px: 2.5,
-                      }}
+                      <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        fontWeight='bold'
+                      >
+                        {menuItem.moduleTitle}
+                      </Typography>
+                    </ListItem>
+
+                    <ListItem
+                      key={`${menuItem.id}-${index}`}
+                      disablePadding
+                      sx={{ display: 'block' }}
                     >
-                      <ListItemIcon
+                      <ListItemButton
+                        onClick={handleListItemToggle}
+                        {...(menuItem.path && {
+                          component: Link,
+                          to: menuItem.path,
+                        })}
                         sx={{
-                          minWidth: 0,
-                          mr: open ? 3 : 'auto',
-                          justifyContent: 'center',
+                          minHeight: 48,
+                          justifyContent: open ? 'initial' : 'center',
+                          px: 2.5,
                         }}
                       >
-                        {menuItem.icon}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={menuItem.label}
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
-                      {listItemOpen ? <ExpandLess /> : <ExpandMore />}
-                    </ListItemButton>
-                  </ListItem>
+                        <ListItemIcon
+                          sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {menuItem.icon}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={menuItem.label}
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                        {listItemOpen ? <ExpandLess /> : <ExpandMore />}
+                      </ListItemButton>
+                    </ListItem>
 
-                  {menuItem.children.map((childMenuItem, index) => (
-                    <Collapse
-                      in={listItemOpen}
-                      key={index}
-                      timeout='auto'
-                      unmountOnExit
+                    {menuItem.children.map((childMenuItem, index) => (
+                      <Collapse
+                        in={listItemOpen}
+                        key={index}
+                        timeout='auto'
+                        unmountOnExit
+                      >
+                        <List disablePadding>
+                          <ListItemButton
+                            {...{
+                              component: Link,
+                              to: childMenuItem.path,
+                              sx: { pl: 4 },
+                            }}
+                          >
+                            <ListItemIcon>{childMenuItem.icon}</ListItemIcon>
+                            <ListItemText primary={childMenuItem.label} />
+                          </ListItemButton>
+                        </List>
+                      </Collapse>
+                    ))}
+                  </>
+                );
+              } else {
+                // hover list item to show children and hide children when mouse leaves
+                return (
+                  <Tooltip
+                    placement='right'
+                    arrow
+                    title={
+                      <>
+                        {menuItem.children.map((childMenuItem, index) => (
+                          <ListItem
+                            key={index}
+                            disablePadding
+                            sx={{ display: 'block' }}
+                          >
+                            <ListItemButton
+                              {...{
+                                component: Link,
+                                to: childMenuItem.path,
+                                sx: {
+                                  display: 'flex',
+                                  justifyContent: 'start',
+                                  alignItems: 'start',
+                                },
+                              }}
+                            >
+                              <ListItemIcon
+                                sx={{ color: 'inherit', mr: 'auto' }}
+                              >
+                                {childMenuItem.icon}
+                              </ListItemIcon>
+                              <ListItemText primary={childMenuItem.label} />
+                            </ListItemButton>
+                          </ListItem>
+                        ))}
+                      </>
+                    }
+                  >
+                    <ListItem
+                      key={`${menuItem.id}-${index}`}
+                      disablePadding
+                      sx={{ display: 'block' }}
                     >
-                      <List component='div' disablePadding>
-                        <ListItemButton sx={{ pl: 4 }}>
-                          <ListItemIcon>{childMenuItem.icon}</ListItemIcon>
-                          <ListItemText primary={childMenuItem.label} />
-                        </ListItemButton>
-                      </List>
-                    </Collapse>
-                  ))}
-                </>
-              );
+                      <ListItemButton
+                        {...{
+                          component: Link,
+                          to: menuItem.path,
+                          sx: {
+                            minHeight: 48,
+                            justifyContent: open ? 'initial' : 'center',
+                            px: 2.5,
+                          },
+                        }}
+                      >
+                        <ListItemIcon
+                          sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          {menuItem.icon}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={menuItem.label}
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                );
+              }
             }
             return (
               <ListItem
@@ -206,12 +284,14 @@ const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
                 sx={{ display: 'block' }}
               >
                 <ListItemButton
-                  component={Link}
-                  to={menuItem.path}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
+                  {...{
+                    component: Link,
+                    to: menuItem.path,
+                    sx: {
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    },
                   }}
                 >
                   <ListItemIcon
@@ -237,7 +317,7 @@ const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
       <Box
         component='main'
         bgcolor='rgb(245, 245, 245)'
-        sx={{ flexGrow: 1, p: 3, minHeight: '100vh' }}
+        sx={{ flexGrow: 1, p: 3, minHeight: '100vh', pt: 10 }}
       >
         {children}
       </Box>

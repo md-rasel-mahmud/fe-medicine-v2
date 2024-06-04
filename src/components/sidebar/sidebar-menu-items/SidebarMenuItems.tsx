@@ -3,7 +3,7 @@ import { Home, Info } from '@mui/icons-material';
 export type SidebarMenuItem = {
   label: string;
   icon: JSX.Element;
-  path: string;
+  path?: string;
   id: string;
   moduleTitle?: string;
   children?: SidebarMenuItem[];
@@ -13,10 +13,15 @@ const sidebarMenuItems: SidebarMenuItem[] = [
   {
     label: 'Dashboard',
     icon: <Home />,
-    path: '/',
     id: 'home',
     moduleTitle: 'Dashboard Module',
     children: [
+      {
+        label: 'Home',
+        icon: <Home />,
+        path: '/',
+        id: 'home',
+      },
       {
         label: 'Home',
         icon: <Home />,
@@ -32,10 +37,10 @@ const sidebarMenuItems: SidebarMenuItem[] = [
     id: 'about',
   },
   {
-    label: 'Contact',
+    label: 'Stock',
     icon: <Info />,
-    path: '/contact',
-    id: 'contact',
+    path: '/stock',
+    id: 'stock',
   },
 ];
 

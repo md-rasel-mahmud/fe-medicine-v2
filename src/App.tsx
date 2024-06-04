@@ -1,10 +1,13 @@
-import { FC } from "react";
-import CommonLayout from "./layouts/CommonLayout";
+import { FC } from 'react';
+import { Outlet } from 'react-router-dom';
+import CommonLayout from './layouts/CommonLayout';
 
 const App: FC = () => {
   return (
     <>
-      <CommonLayout />
+      <CommonLayout>
+        <Outlet />
+      </CommonLayout>
     </>
   );
 };
