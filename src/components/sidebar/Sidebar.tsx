@@ -1,5 +1,5 @@
-import { ChevronLeft, ExpandLess, ExpandMore, Menu } from '@mui/icons-material';
-import { Avatar, Collapse, Tooltip } from '@mui/material';
+import { ChevronLeft, Menu } from '@mui/icons-material';
+import { Avatar, Tooltip } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,6 +17,7 @@ import { CSSObject, Theme, styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import SideBarHeader from './SideBarHeader';
+import SidebarCollapse from './SidebarCollapse';
 import sidebarMenuItems from './sidebar-menu-items/SidebarMenuItems';
 
 const drawerWidth = 240;
@@ -87,14 +88,10 @@ type SidebarPropsType = {
 
 const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
   const [open, setOpen] = React.useState(true);
-  const [listItemOpen, setListItemOpen] = React.useState(false);
+  // const [listItemOpen, setListItemOpen] = React.useState(false);
 
   const handleDrawerOpenClose = () => {
     setOpen(!open);
-  };
-
-  const handleListItemToggle = () => {
-    setListItemOpen(!listItemOpen);
   };
 
   return (
@@ -134,82 +131,16 @@ const Sidebar: React.FC<SidebarPropsType> = ({ children }) => {
             if (menuItem.children) {
               if (open) {
                 return (
-                  <>
-                    <ListItem
-                      key={`${menuItem.id}-${index}`}
-                      sx={{ display: open ? 'block' : 'none' }}
-                    >
-                      <Typography
-                        variant='body2'
-                        color='text.secondary'
-                        fontWeight='bold'
-                      >
-                        {menuItem.moduleTitle}
-                      </Typography>
-                    </ListItem>
-
-                    <ListItem
-                      key={`${menuItem.id}-${index}`}
-                      disablePadding
-                      sx={{ display: 'block' }}
-                    >
-                      <ListItemButton
-                        onClick={handleListItemToggle}
-                        {...(menuItem.path && {
-                          component: Link,
-                          to: menuItem.path,
-                        })}
-                        sx={{
-                          minHeight: 48,
-                          justifyContent: open ? 'initial' : 'center',
-                          px: 2.5,
-                        }}
-                      >
-                        <ListItemIcon
-                          sx={{
-                            minWidth: 0,
-                            mr: open ? 3 : 'auto',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          {menuItem.icon}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={menuItem.label}
-                          sx={{ opacity: open ? 1 : 0 }}
-                        />
-                        {listItemOpen ? <ExpandLess /> : <ExpandMore />}
-                      </ListItemButton>
-                    </ListItem>
-
-                    {menuItem.children.map((childMenuItem, index) => (
-                      <Collapse
-                        in={listItemOpen}
-                        key={index}
-                        timeout='auto'
-                        unmountOnExit
-                      >
-                        <List disablePadding>
-                          <ListItemButton
-                            {...{
-                              component: Link,
-                              to: childMenuItem.path,
-                              sx: { pl: 4 },
-                            }}
-                          >
-                            <ListItemIcon>{childMenuItem.icon}</ListItemIcon>
-                            <ListItemText primary={childMenuItem.label} />
-                          </ListItemButton>
-                        </List>
-                      </Collapse>
-                    ))}
-                  </>
+                  <React.Fragment key={menuItem.id}>
+                    <SidebarCollapse collapseData={menuItem} open={open} />
+                  </React.Fragment>
                 );
               } else {
                 // hover list item to show children and hide children when mouse leaves
                 return (
                   <Tooltip
                     placement='right'
+                    key={index}
                     arrow
                     title={
                       <>

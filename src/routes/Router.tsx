@@ -1,7 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
-import About from '../pages/About';
+import UtilComponents from '../components/utils/UtilComponents';
+import RenderedForm from '../components/utils/form/RenderedForm';
 import Home from '../pages/Home';
+import Medicine from '../pages/Medicine';
 import Stock from '../pages/Stock';
 
 export const router = createBrowserRouter([
@@ -14,12 +16,22 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/about',
-        element: <About />,
+        path: '/medicine',
+        element: <Medicine />,
       },
       {
         path: '/stock',
         element: <Stock />,
+      },
+      {
+        path: '/util-components',
+        element: <UtilComponents />,
+        children: [
+          {
+            path: 'form',
+            element: <RenderedForm />,
+          },
+        ],
       },
     ],
   },
