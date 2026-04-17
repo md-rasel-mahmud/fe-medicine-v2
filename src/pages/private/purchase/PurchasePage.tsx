@@ -1,7 +1,6 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
-import { useReactToPrint } from "react-to-print";
 import { FileText } from "lucide-react";
 import {
   DataTable,
@@ -57,17 +56,9 @@ export default function PurchasePage() {
     saveAs(blob, `purchase_report_page_${page}.csv`);
   };
 
-  // Print handler using react-to-print
-  const printRef = useRef<HTMLDivElement>(null);
-  const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    documentTitle: `purchase_report_page_${page}`,
-  });
-  const onPrint = handlePrint;
-
   return (
     <div className="space-y-4 p-4 md:p-6">
-      <div ref={printRef}>
+      <div>
         <DataTable
           title="Purchase list"
           description="Purchase history from /purchase/all"
@@ -81,7 +72,6 @@ export default function PurchasePage() {
           pagination={data?.pagination}
           onPageChange={setPage}
           onExportCsv={onExportCsv}
-          onPrint={onPrint}
           renderActions={(row) => (
             <button
               className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-50 text-blue-600 rounded hover:bg-blue-100 font-medium"

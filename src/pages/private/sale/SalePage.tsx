@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useMemo, useState } from "react";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
-import { useReactToPrint } from "react-to-print";
-import { FileText, Printer, Receipt } from "lucide-react";
+import { FileText, Receipt } from "lucide-react";
 import {
   DataTable,
   type DataTableColumn,
@@ -60,18 +60,9 @@ export default function SalePage() {
     saveAs(blob, `sales_report_page_${page}.csv`);
   };
 
-  // Print handler using react-to-print
-  const printRef = useRef<HTMLDivElement>(null);
-  const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    documentTitle: `sales_report_page_${page}`,
-  });
-
-  const onPrint = handlePrint;
-
   return (
     <div className="space-y-4 p-4 md:p-6">
-      <div ref={printRef}>
+      <div>
         <DataTable
           title="Sale list"
           description="CRUD data from /sale/all"
@@ -85,7 +76,6 @@ export default function SalePage() {
           pagination={data?.pagination}
           onPageChange={setPage}
           onExportCsv={onExportCsv}
-          onPrint={onPrint}
           renderActions={(row) => (
             <div className="flex gap-2">
               <button

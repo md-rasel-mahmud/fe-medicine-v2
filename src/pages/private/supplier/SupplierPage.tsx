@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/tooltip";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -115,11 +114,7 @@ export default function SupplierPage() {
     }
   }, [open, editingSupplier, reset]);
 
-  const onSubmit = async (values: z.infer<typeof schema>) => {
-    await createSupplier(values).unwrap();
-    setOpen(false);
-    reset(defaultValues);
-  };
+  // Removed unused onSubmit
 
   // Helper to clean empty optional fields
   function cleanSupplierPayload(values: z.infer<typeof schema>) {
@@ -248,10 +243,10 @@ export default function SupplierPage() {
             if (editingSupplier && editingSupplier._id) {
               await updateSupplier({
                 id: editingSupplier._id,
-                body: cleaned,
+                body: cleaned as SupplierType,
               }).unwrap();
             } else {
-              await createSupplier(cleaned).unwrap();
+              await createSupplier(cleaned as SupplierType).unwrap();
             }
             setOpen(false);
             reset(defaultValues);

@@ -5,12 +5,6 @@ import {
   DataTable,
   type DataTableColumn,
 } from "@/components/common/table/DataTable";
-import { Pencil, Trash } from "lucide-react";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
 import {
   Dialog,
   DialogContent,
@@ -20,10 +14,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  useUpdateStockMutation,
-  useDeleteStockMutation,
-} from "@/lib/redux/api-services/stock.api";
+import { useDeleteStockMutation } from "@/lib/redux/api-services/stock.api";
 import { useGetStocksQuery } from "@/lib/redux/api-services/stock.api";
 import { formatDate } from "../utils";
 
@@ -39,20 +30,9 @@ export default function StockPage() {
   const [page, setPage] = useState(1);
   const limit = 10;
   const { data, isLoading } = useGetStocksQuery({ page, limit });
-  const [updateStock] = useUpdateStockMutation();
   const [deleteStock] = useDeleteStockMutation();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const handleEdit = (row: FlattenedStockRow) => {
-    // Implement edit logic if needed (e.g., open modal, set editing state)
-    // For demo, just alert
-    alert("Edit stock is not implemented in this demo.");
-  };
-
-  const handleDelete = (row: FlattenedStockRow) => {
-    setDeletingId(row.id);
-    setDeleteDialogOpen(true);
-  };
 
   const confirmDelete = async () => {
     if (deletingId) {
@@ -143,41 +123,6 @@ export default function StockPage() {
           pagination={data?.pagination}
           onPageChange={setPage}
           onExportCsv={onExportCsv}
-          renderActions={(row) => {
-            // Only show actions if the stock id is not the fallback "stock"
-            const stockId = row.id.split("-")[0];
-            if (!stockId || stockId === "stock") return null;
-            return (
-              <div className="flex gap-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon-sm"
-                      variant="outline"
-                      onClick={() => handleEdit(row)}
-                      aria-label="Edit"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Edit</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon-sm"
-                      variant="destructive"
-                      onClick={() => handleDelete(row)}
-                      aria-label="Delete"
-                    >
-                      <Trash className="w-4 h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Delete</TooltipContent>
-                </Tooltip>
-              </div>
-            );
-          }}
         />
       </div>
 

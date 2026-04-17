@@ -1,41 +1,36 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Toast middleware for RTK Query (handles all non-GET API responses)
 import type { Middleware } from "@reduxjs/toolkit";
 import { isRejectedWithValue, isFulfilled } from "@reduxjs/toolkit";
-
-// You must implement your own toast function/component
-// Example: import { toast } from '@/lib/ui/toast';
-// For now, use window.alert as a placeholder
-const showToast = (msg: string, type: "success" | "error" = "success") => {
-  // Replace with your toast system
-  window.alert(`${type === "error" ? "Error: " : ""}${msg}`);
-};
+import { toast } from "sonner";
 
 export const toastMiddleware: Middleware = () => (next) => (action) => {
   // RTK Query fulfilled action
   if (isFulfilled(action)) {
     // Only for non-GET endpoints (mutation)
+    const arg = action.meta?.arg as { endpointName?: string };
     if (
-      action.meta &&
-      action.meta.arg &&
-      action.meta.arg.endpointName &&
-      !action.meta.arg.endpointName.toLowerCase().startsWith("get")
+      arg &&
+      typeof arg.endpointName === "string" &&
+      !arg.endpointName.toLowerCase().startsWith("get")
     ) {
-      const message = action.payload?.message;
+      const message = (action.payload as any)?.message;
       if (message) {
-        showToast(message, "success");
+        toast.success(message);
       }
     }
   }
   // RTK Query rejected action
   if (isRejectedWithValue(action)) {
+    const arg = action.meta?.arg as { endpointName?: string };
     if (
-      action.meta &&
-      action.meta.arg &&
-      action.meta.arg.endpointName &&
-      !action.meta.arg.endpointName.toLowerCase().startsWith("get")
+      arg &&
+      typeof arg.endpointName === "string" &&
+      !arg.endpointName.toLowerCase().startsWith("get")
     ) {
-      const message = action.payload?.data?.message || "Something went wrong";
-      showToast(message, "error");
+      const message =
+        (action.payload as any)?.data?.message || "Something went wrong";
+      toast.error(message);
     }
   }
   return next(action);
