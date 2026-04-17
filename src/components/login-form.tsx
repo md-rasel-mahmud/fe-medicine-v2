@@ -177,6 +177,26 @@ export function LoginForm({
                   </FieldDescription>
                 )}
               </div>
+              {/* Demo credentials section */}
+              <div className="bg-muted rounded-md p-4 my-2 text-left text-xs md:text-sm">
+                <div className="font-semibold mb-1">Demo Credentials:</div>
+                <div className="mb-1">
+                  <span className="font-medium">Admin</span>
+                  <br />
+                  Email:{" "}
+                  <span className="select-all">md.r.m.rana28@gmail.com</span>
+                  <br />
+                  Password: <span className="select-all">SecurePass123</span>
+                </div>
+                <div>
+                  <span className="font-medium">Staff</span>
+                  <br />
+                  Email:{" "}
+                  <span className="select-all">rasel-staff@mail.com</span>
+                  <br />
+                  Password: <span className="select-all">SecurePass123</span>
+                </div>
+              </div>
 
               <FieldGroup>
                 <Field>
